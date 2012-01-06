@@ -10,6 +10,7 @@ from xgoogle.BeautifulSoup import *
 from sys import stderr
 #############################
 
+# What we are pretending to be when we ask google.
 user_agents = [
         'Mozilla/5.0 (Windows; U; Windows NT 5.1; it; rv:1.8.1.11) Gecko/20071127 Firefox/2.0.0.11',
         'Opera/9.25 (Windows NT 5.1; U; en)'
@@ -44,7 +45,9 @@ class Oracle():
         self.zzz     = 12
         self.wordlist = [w for w in nltk.corpus.brown.words() if w.islower()]
     def seed(self):
-        """come up with a magic number to use as a seed  """
+        """ Outputs a number 'n' that we use as a seed. It is derived from the time of the execution. We use this for picking the nth result page 
+            from our search, the nth a word from that  page and it will be the total of words we are going to search for. 
+        """
         t=list(time.gmtime())
         n=t[3]+t[4]
         n=list(str(n))
@@ -66,7 +69,10 @@ class Oracle():
             return self.cached_results[word]
         
     def opener(self,url):
-        """Open a url and return raw html """
+        """ Get a url as an argument, retrieve it and dump the html 
+            sleep randomly between opening urls so google does not figures out we 
+            are not humans.
+        """
         try:
             print "--opening : ", url
             self.zzz=(random.random()+random.choice([0.3,1,1.2,2,0.3]))            
@@ -136,7 +142,7 @@ class Oracle():
         return word
 
     def makeoracle(self,words):
-
+        """ A futile attempt to make sense of the words"""
         s = ' '.join(self.words)
         tokens  = nltk.word_tokenize(s)
         text    = nltk.Text(tokens)
@@ -147,6 +153,8 @@ class Oracle():
         return tokens
         
     def oracle(self,word,x):
+        """ This is the main function, runs in a loop until we have collected all the words we needed. It quits if there are too many failures.
+        """
         self.word=word
         self.words.append(word)
 
